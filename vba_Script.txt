@@ -1,0 +1,103 @@
+Sub MultipleCharts()
+    Dim charts(1 To 4) As Chart
+    Set charts(1) = ActiveSheet.Shapes.AddChart(Left:=400, Width:=650, Top:=400, Height:=300).Chart
+    charts(1).ChartType = xlXYScatterLines
+    Set charts(2) = ActiveSheet.Shapes.AddChart(Left:=1200, Width:=650, Top:=800, Height:=300).Chart
+    charts(2).ChartType = xlArea
+    Set charts(3) = ActiveSheet.Shapes.AddChart(Left:=1200, Width:=650, Top:=400, Height:=300).Chart
+    charts(3).ChartType = xlColumnClustered
+    Set charts(4) = ActiveSheet.Shapes.AddChart(Left:=400, Width:=650, Top:=800, Height:=300).Chart
+    charts(4).ChartType = xlBarClustered
+    
+    Dim item  As Variant
+    For Each item In charts                                     ' for loop starts
+        
+        With item.Axes(xlCategory).TickLabels.Font
+            
+            .Bold = msoTrue
+            .Size = 14
+        End With
+        
+                                                                ' Creating Border to plot area
+        item.PlotArea.Select
+        With Selection.Format.Line
+            .Visible = msoTrue
+            .ForeColor.RGB = RGB(64, 64, 64)
+        End With
+        
+                                                                ' Editing chart
+        With item
+            .SetSourceData Source:=Sheets(1).Range("A1:E177")
+            
+            With .Axes(xlValue, xlPrimary)
+                .HasTitle = True
+                With .AxisTitle
+                    .Font.Size = 10
+                    .Font.Bold = True
+                    .Font.Color = RGB(102, 102, 102)
+                End With
+            End With
+           
+            
+            .Axes(xlValue).MinimumScale = 0
+            .Axes(xlValue).MaximumScale = 100
+            .Axes(xlValue).MajorUnit = 20
+            
+            
+            With .Axes(xlCategory, xlPrimary)
+                .HasTitle = True
+                With .AxisTitle
+                    .Font.Size = 10
+                    .Font.Bold = True
+                    .Font.Color = RGB(102, 102, 102)
+                End With
+            End With
+            
+            .ChartArea.Format.Line.Visible = True
+            .SeriesCollection(1).Format.Line.Weight = 2.3
+            .SeriesCollection(2).Format.Line.Weight = 2.3
+            .SeriesCollection(3).Format.Line.Weight = 2.3
+            .SeriesCollection(4).Format.Line.Weight = 2.3
+            
+            .SeriesCollection(1).MarkerStyle = xlMarkerStyleNone
+            .SeriesCollection(2).MarkerStyle = xlMarkerStyleNone
+            .SeriesCollection(3).MarkerStyle = xlMarkerStyleNone
+            .SeriesCollection(4).MarkerStyle = xlMarkerStyleNone
+            .HasTitle = True
+            .ChartTitle.Text = "Load Test Graph - CPU Utilization"
+            .ChartTitle.Font.Color = RGB(102, 102, 102)
+            
+            .HasLegend = True
+            .Axes(xlCategory).HasTitle = True
+            .Axes(xlCategory).AxisTitle.Text = "Time(hh:mm:ss)"
+            .Axes(xlValue).HasTitle = True
+            
+            .Axes(xlValue).AxisTitle.Text = "CPU Utilization(%)"
+            
+            .HasLegend = True
+            With .Legend
+                .Position = xlLegendPositionBottom
+                .Font.Size = 16
+                .Font.Bold = True
+                .Font.Color = RGB(102, 102, 102)
+            End With
+            
+            .Axes(xlCategory).AxisTitle.Font.Size = 16
+            .Axes(xlValue).AxisTitle.Font.Size = 16
+            .PlotArea.Select
+            
+        End With
+        With item.Axes(xlValue).TickLabels.Font
+            .Bold = msoTrue
+            .Size = 14
+            .Color = RGB(102, 102, 102)
+            
+        End With
+        With item.Axes(xlCategory).TickLabels.Font
+            .Bold = msoTrue
+            .Size = 14
+            .Color = RGB(102, 102, 102)
+            
+        End With
+    Next item
+End Sub
